@@ -369,10 +369,17 @@ def prepare_data_pipeline(is_ollama_embedder: bool = None):
 
     splitter = TextSplitter(**configs["text_splitter"])
     embedder_config = get_embedder_config()
+    # 检查是否使用本地嵌入器
+    client_class = embedder_config.get("client_class", "")
 
     embedder = get_embedder(is_local_ollama=is_ollama_embedder)
-
-    if is_ollama_embedder:
+    if client_class == "LocalEmbedderClient":
+        # 使用本地文档处理器
+        from api.local_document_processor import LocalDocumentProcessor
+        embedder = get_embedder(is_local_ollama=False)  # 获取本地嵌入器
+        embedder_transformer = LocalDocumentProcessor(embedder=embedder)
+        logger.info("Using LocalDocumentProcessor")
+    elif is_ollama_embedder:
         # Use Ollama document processor for single-document processing
         embedder_transformer = OllamaDocumentProcessor(embedder=embedder)
     else:

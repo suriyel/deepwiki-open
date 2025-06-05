@@ -45,13 +45,16 @@ WIKI_AUTH_CODE = os.environ.get('DEEPWIKI_AUTH_CODE', '')
 # Get configuration directory from environment variable, or use default if not set
 CONFIG_DIR = os.environ.get('DEEPWIKI_CONFIG_DIR', None)
 
+from api.local_embedder_client import LocalEmbedderClient
+
 # Client class mapping
 CLIENT_CLASSES = {
     "GoogleGenAIClient": GoogleGenAIClient,
     "OpenAIClient": OpenAIClient,
     "OpenRouterClient": OpenRouterClient,
     "OllamaClient": OllamaClient,
-    "BedrockClient": BedrockClient
+    "BedrockClient": BedrockClient,
+    "LocalEmbedderClient": LocalEmbedderClient
 }
 
 def replace_env_placeholders(config: Union[Dict[str, Any], List[Any], str, Any]) -> Union[Dict[str, Any], List[Any], str, Any]:
